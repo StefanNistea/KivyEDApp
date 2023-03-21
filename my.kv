@@ -1,0 +1,506 @@
+#    Created: 06.03.2021
+#    Author: Artaao
+#	 Email: Artaao@protonmail.com
+#
+#    Last modified by: Artaao (Artaao@protonmail.com)
+#    Last modified date: 21.03.2023
+#
+#    Scope: define the user interface 
+
+WindowManager:
+	InitWindow:
+    MainWindow:
+    SecondWindow:
+    ThirdWindow:
+    ForthWindow:
+    FifthWindow:
+
+<Button>:
+    color: 0.0, 1, 0.0, 1
+    background_color: 0.25, 0.25, 0.25
+
+<InitWindow>:
+	Button:
+		id: continueWithApp
+		size_hint: 1, 1
+		
+		text: "Press anywhere to Start"
+		
+		on_release: 
+			app.root.current = "Welcome"
+
+<MainWindow>:
+    name: "Welcome"
+	
+	Label:
+		# id: welcomeLabel
+		pos_hint: {"top":1.4}
+		
+		text: "- - - - - Welcome to ED - - - - -"
+		color: 0.0, 1, 0.0, 1
+		font_size: self.width * 0.05 if (self.width * 0.05) < self.height/10 else self.height/10
+		
+	Label:
+		# id: descriptionLabel
+		pos_hint: {"top": 1.25}
+		
+		text: "The project aims to offer a simple interface \nfor safe, local encryption"
+		
+		color: 0.0, 1, 0.0, 1
+        font_size: self.width * 0.035 if (self.width * 0.035) < self.height/15 else self.height/15
+		halign: 'center'
+		
+	Label:
+		# id: advice
+		pos_hint: {"top": 1.1}
+		
+		text: "The plaintext and passwords \nshould avoid clipboards for improved security."
+		
+		color: 0.0, 1, 0.0, 1
+        font_size: self.width * 0.035 if (self.width * 0.035) < self.height/15 else self.height/15
+		halign: 'center'
+		
+	Label:
+		# id: hint
+		pos_hint: {"top": 0.95}
+		
+		text: "Hint: Just follow the buttons."
+		
+		color: 0.0, 1, 0.0, 1
+		font_size: self.width * 0.035 if (self.width * 0.035) < self.height/15 else self.height/15
+		halign: 'center'
+
+	Button:
+		pos_hint: {"x": 0.1, "top": 0.4}
+		text: "Encrypt"
+		
+		size_hint: 0.35, 0.15
+		
+		# keeps the font size within the borders of the button
+		font_size: self.width * 0.15 if (self.width * 0.15) < self.height else self.height * 0.8
+		
+		on_release: 
+			app.root.current = "EPassword"
+			root.manager.transition.direction = "left"
+
+	Button:
+		pos_hint: {"x": 0.55, "top": 0.4}
+		text: "Decrypt"
+		
+		size_hint: 0.35, 0.15
+		
+		# keeps the font size within the borders of the button
+		font_size: self.width * 0.15 if (self.width * 0.15) < self.height else self.height * 0.8
+			
+		
+		on_release: 
+			app.root.current = "DPassword"
+			root.manager.transition.direction = "left"
+	
+	Button:
+		id: "bmc"
+		background_color: 0, 0, 0, 0
+		
+		pos_hint: {"x": 0.3, "top": 0.18}
+		size_hint: 0.4, 0.1
+		# size_hint: 0.25, 0.075
+		
+		on_press: 
+			root.pressButton()
+		
+		on_release:
+			root.releaseButton()
+		
+		Image:
+			id: bmcImage
+			
+			source: "resources/bmcButton.png"
+			center_x: self.parent.center_x
+			center_y: self.parent.center_y
+			size: self.parent.size
+
+<SecondWindow>:
+    name: "EPassword"
+
+    encryptionKey:encryptionKey
+
+    Label:
+        pos_hint: {"top": 1.35}
+        color: 0.0, 1, 0.0, 1
+        font_size: self.width * 0.05 if (self.width * 0.05) < self.height/10 else self.height/10
+        text: "Input Encryption Password"
+
+
+    TextInput:
+        id: encryptionKey
+        password: True
+        multiline: False
+        pos_hint: {"x": 0.1, "top": 0.75}
+
+        size_hint: 0.8, None
+		height: 60
+
+        font_size: 40
+
+        on_text_validate:
+            root.enc()
+            app.root.current = "Encrypt"
+
+	
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.98}
+        text: "Home"
+
+        size_hint: 0.2, 0.075
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+		
+		halign: 'center'
+		valign: 'middle'
+
+        on_release:
+			root.changeScreenAction()
+            root.manager.transition.direction = "right"
+            app.root.current = "Welcome"
+	
+	Button:
+        pos_hint: {"x": 0.25, "top": 0.6}
+        text: "Next"
+
+        size_hint: 0.5, 0.08
+		# keeps the font size within the borders of the button
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+
+        on_release:
+            root.enc()
+            root.manager.transition.direction = "left"
+            app.root.current = "Encrypt"
+			
+    Button:
+		pos_hint: {"x": 0.25, "top": 0.45}
+        text: "Change To Decryption"
+
+        size_hint: 0.5, 0.08
+		# keeps the font size within the borders of the button
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+			
+		halign: 'center'
+		valign: 'middle'
+
+        on_release:
+            root.changeScreenAction()
+            root.manager.transition.direction = "up"
+            app.root.current = "DPassword"
+	
+	Image:
+		source: "resources/logo.png"
+		
+		pos_hint: {"x": 0.32, "top": 0.37}
+		size_hint: 0.35, 0.35
+
+
+
+<ThirdWindow>:
+    name: "DPassword"
+
+    decryptionKey:decryptionKey
+
+    Label:
+        pos_hint: {"top": 1.35}
+        color: 0.0, 1, 0.0, 1
+        font_size: self.width * 0.05 if (self.width * 0.05) < self.height/10 else self.height/10
+        text: "Input Decryption Password"
+
+
+    TextInput:
+        id: decryptionKey
+        password: True
+        multiline: False
+        pos_hint: {"x": 0.1, "top": 0.75}
+
+        size_hint: 0.8, None
+		height: 60
+
+        font_size: 40
+
+        on_text_validate:
+            root.dec()
+            app.root.current = "Decrypt"
+
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.98}
+        text: "Home"
+
+        size_hint: 0.2, 0.075
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+		
+		halign: 'center'
+		valign: 'middle'
+
+        on_release:
+			root.changeScreenAction()
+            root.manager.transition.direction = "right"
+            app.root.current = "Welcome"
+			
+	Button:
+        pos_hint: {"x": 0.25, "top": 0.6}
+        text: "Next"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+
+        on_release:
+            root.dec()
+            root.manager.transition.direction = "left"
+            app.root.current = "Decrypt"		
+			
+    Button:
+		pos_hint: {"x": 0.25, "top": 0.45}
+        text: "Change To Encryption"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+		
+		halign: 'center'
+		valign: 'middle'
+
+        on_release:
+            root.changeScreenAction()
+            root.manager.transition.direction = "down"
+            app.root.current = "EPassword"
+			
+	Image:
+		source: "resources/logo.png"
+		
+		pos_hint: {"x": 0.32, "top": 0.37}
+		size_hint: 0.35, 0.35
+
+
+<ForthWindow>:
+    name: "Encrypt"
+
+    plaintext:plaintext
+	
+	Label:
+		# id: textEncryption
+		pos_hint: {"x": -0.1, "top": 1.45}
+		# size_hint: 0.6, 0.05
+		
+		text: "Text Encryption"
+		color: 0.0, 1, 0.0, 1
+		font_size: self.width * 0.075 if (self.width * 0.075) < self.height/15 else self.height/15
+	
+    TextInput:
+        id: plaintext
+        password: False
+        multiline: True
+
+        pos_hint: {"x": 0.1, "top": 0.9}
+        hint_text: "Insert the plaintext here"
+        size_hint: 0.6, 0.25
+        font_size: self.width * 0.05
+
+
+    TextInput:
+        id: encrypted
+        readonly: True
+		password: False
+        multiline: True
+
+        pos_hint: {"x": 0.1, "top": 0.5}
+        hint_text: "The ciphertext will be displayed here"
+        size_hint: 0.6, 0.25
+        font_size: self.width * 0.05
+	
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.98}
+        text: "Home"
+
+        size_hint: 0.2, 0.075
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+		
+		halign: 'center'
+		valign: 'middle'
+
+        on_release:
+			root.changeScreenToWelcome()
+            root.manager.transition.direction = "right"
+            app.root.current = "Welcome"
+			
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.875}
+        text: "Paste"
+
+        size_hint: 0.20, 0.20
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+
+        on_release:
+			root.takeFromClipboard()
+	
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.475}
+        text: "Copy"
+
+        size_hint: 0.20, 0.20
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+
+        on_release:
+			root.addToClipboard(encrypted.text)
+	
+    Button:
+		pos_hint: {"x": 0.15, "top": 0.125}	
+        text: "Change Password"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+		
+		halign: 'center'
+		valign: 'middle'
+
+        on_release:
+            root.manager.transition.direction = "right"
+            root.changeScreenAction()
+            app.root.current = "EPassword"
+
+
+    Button:
+        pos_hint: {"x": 0.15, "top": 0.615}
+        text: "Encrypt"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.1 if (self.width * 0.1) < self.height else self.height * 0.8
+
+        on_release:
+            root.encode()
+
+    Button:
+        pos_hint: {"x": 0.15, "top": 0.225}
+        text: "Change To Decryption"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+
+        on_release:
+            root.manager.transition.direction = "up"
+            root.changeScreenToDecryption()
+            app.root.current = "Decrypt"
+			
+	Image:
+		source: "resources/logo.png"
+		
+		pos_hint: {"x": 0.72, "top": 0.27}
+		size_hint: 0.25, 0.25
+		
+
+<FifthWindow>:
+    name: "Decrypt"
+
+    ciphertext:ciphertext
+	
+	Label:
+		# id: textDecryption
+		pos_hint: {"x": -0.1, "top": 1.45}
+		# size_hint: 0.6, 0.05
+		
+		text: "Text Decryption"
+		color: 0.0, 1, 0.0, 1
+		font_size: self.width * 0.075 if (self.width * 0.075) < self.height/15 else self.height/15
+
+    TextInput:
+        id: ciphertext
+        password: False
+        multiline: True
+
+        pos_hint: {"x": 0.1, "top": 0.9}
+        hint_text: "Insert the ciphertext here"
+        size_hint: 0.6, 0.25
+        font_size: self.width * 0.05
+
+    TextInput:
+        id: decrypted
+        readonly: True
+        password: False
+        multiline: True
+
+        pos_hint: {"x": 0.1, "top": 0.5}
+        hint_text:"If the password is correct, the plaintext will be shown here"
+        size_hint: 0.6, 0.25
+        font_size: self.width * 0.05
+	
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.98}
+        text: "Home"
+
+        size_hint: 0.2, 0.075
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+		
+		halign: 'center'
+		valign: 'middle'
+
+        on_release:
+			root.changeScreenToWelcome()
+            root.manager.transition.direction = "right"
+            app.root.current = "Welcome"
+		
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.875}
+        text: "Paste"
+
+        size_hint: 0.20, 0.20
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+
+        on_release:
+			root.takeFromClipboard()
+	
+	Button:
+		pos_hint: {"x": 0.775, "top": 0.475}
+        text: "Copy"
+
+        size_hint: 0.20, 0.20
+        font_size: self.width * 0.2 if (self.width * 0.2) < self.height else self.height * 0.8
+
+        on_release:
+			root.addToClipboard(decrypted.text)
+	
+    Button:
+        pos_hint: {"x": 0.15, "top": 0.125}	
+        text: "Change Password"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+		
+		halign: 'center'
+		valign: 'middle'
+		
+        on_release:
+            root.manager.transition.direction = "right"
+            root.changeScreenAction()
+            app.root.current = "DPassword"
+
+
+    Button:
+        pos_hint: {"x": 0.15, "top": 0.615}
+        text: "Decrypt"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.1 if (self.width * 0.1) < self.height else self.height * 0.8
+
+        on_release:
+            root.decode()
+
+    Button:
+        pos_hint: {"x": 0.15, "top": 0.225}
+        text: "Change To Encryption"
+
+        size_hint: 0.5, 0.08
+        font_size: self.width * 0.08 if (self.width * 0.08) < self.height else self.height * 0.8
+
+        on_release:
+            root.manager.transition.direction = "down"
+            root.changeScreenToEncryption()
+            app.root.current = "Encrypt"
+			
+	Image:
+		source: "resources/logo.png"
+		
+		pos_hint: {"x": 0.72, "top": 0.27}
+		size_hint: 0.25, 0.25
