@@ -4,7 +4,7 @@
     Email: Artaao@protonmail.com
 
     Last modified by: Artaao (Artaao@protonmail.com)
-    Last modified date: 21.03.2023
+    Last modified date: 22.03.2023
     
     Required package: kivy
     Required files: decryptionAlgorithm.py, encryptionAlgorithm.py, my.kv
@@ -67,7 +67,7 @@ class SecondWindow(Screen):  # Encryption password request
         self.ids.encryptionKey.text = ""
 
 
-class ThirdWindow(Screen):  # Encryption password request
+class ThirdWindow(Screen):  # Decryption password request
 
     def dec(self):
         decryptionKey = ObjectProperty(None)
@@ -90,10 +90,14 @@ class ForthWindow(Screen):  # Encryption screen
 
     def encode(self):
         self.key = dc.get_encpass()
-        self.ciphertext = encryptionAlgorithm.encrypt(self.plaintext.text, self.key)  # Output: b' [bytes] '
-        # b ' ' must be deleted in the next two lines.
-        self.ciphertext = str(self.ciphertext)
-        self.ciphertext = self.ciphertext[2:-1]
+        
+        try:
+            self.ciphertext = encryptionAlgorithm.encrypt(self.plaintext.text, self.key)  # Output: b' [bytes] '
+            # b ' ' must be deleted in the next two lines.
+            self.ciphertext = str(self.ciphertext)
+            self.ciphertext = self.ciphertext[2:-1]
+        except ValueError:
+            self.ciphertext = "Images and emojis are not supported yet"
 
         self.ids.encrypted.text = self.ciphertext
 
