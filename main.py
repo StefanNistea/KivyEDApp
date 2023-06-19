@@ -1,10 +1,10 @@
 """
     Created: 06.03.2021
-    Author: Artaao
-    Email: Artaao@protonmail.com
+    Author: StefanN
+    Email: stefannistea@yahoo.com
 
-    Last modified by: Artaao (Artaao@protonmail.com)
-    Last modified date: 22.03.2023
+    Last modified by: StefanN (stefannistea@yahoo.com)
+    Last modified date: 19.06.2023
     
     Required package: kivy
     Required files: decryptionAlgorithm.py, encryptionAlgorithm.py, my.kv

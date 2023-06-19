@@ -1,10 +1,10 @@
 """
     Created: 26.01.2021
-    Author: Artaao
-    Email: Artaao@protonmail.com
+    Author: StefanN
+    Email: stefannistea@yahoo.com
     
-    Last modified by: Artaao (Artaao@protonmail.com)
-    Last modified date: 21.03.2023
+    Last modified by: StefanN (stefannistea@yahoo.com)
+    Last modified date: 19.06.2023
     
     Required package: pycryptodome
 
@@ -14,6 +14,7 @@
 """
 
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
 import hashlib
 
 
@@ -33,27 +34,44 @@ def decrypt(ciphertext, cipherkey):
     IV = "0123456789012345".encode()  # len(IV) == 16
 
     cipher = AES.new(key, mode, IV)
+    
+    # byte string with double \
     bytes_ciphertext_doubled = ciphertext.encode()
+    
+    # get the correct byte string 
     try:
         bytes_ciphertext = bytes_ciphertext_doubled.decode('unicode-escape').encode('ISO-8859-1')
+        # e.g: b'O\\x8c\\x90\\x05\\xa1\\xe2!\\xbe' becomes b'O\x8c\x90\x05\xa1\xe2!\xbe'
         # https://stackoverflow.com/a/33258055
     except UnicodeDecodeError:
-        plaintext = "Something went wrong." \
+        plaintext = "Something went wrong. Error_code: 1" \
                     "\nDo you have the right message? " \
                     "\nDo you have the right password?"
         return plaintext
-
+    
+    # decrypt data
     try:
         padded_plaintext_bytes = cipher.decrypt(bytes_ciphertext)
     except ValueError:
-        plaintext = "Something went wrong." \
+        plaintext = "Something went wrong. Error_code: 2" \
                     "\nDo you have the right message? " \
                     "\nDo you have the right password?"
         return plaintext
+    
+    # Remove the padding from the decrypted plaintext
     try:
-        plaintext = padded_plaintext_bytes.rstrip().decode()
+        unpadded_data = unpad(padded_plaintext_bytes, AES.block_size)
     except:
-        plaintext = "Something went wrong." \
+        plaintext = "Something went wrong. Error_code: 3" \
+                    "\nDo you have the right message? " \
+                    "\nDo you have the right password?"
+        return plaintext
+        
+    # utf-8 to normal text
+    try:
+        plaintext = unpadded_data.rstrip().decode("utf-8")
+    except:
+        plaintext = "Something went wrong. Error_code: 4" \
                     "\nDo you have the right message? " \
                     "\nDo you have the right password?"
         return plaintext
