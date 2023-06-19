@@ -1,10 +1,10 @@
 """
     Created: 26.01.2021
-    Author: Artaao
-    Email: Artaao@protonmail.com
+    Author: StefanN
+    Email: stefannistea@yahoo.com
     
-    Last modified by: Artaao (Artaao@protonmail.com)
-    Last modified date: 21.03.2023
+    Last modified by: StefanN (stefannistea@yahoo.com)
+    Last modified date: 19.06.2023
     
     Required package: pycryptodome
     
@@ -14,13 +14,8 @@
 """
 
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad 
 import hashlib
-
-
-def pad_message(message):
-    while len(message) % 16 != 0:
-        message = message + " "
-    return message
 
 
 def encrypt(plaintext, cipherkey):
@@ -37,11 +32,9 @@ def encrypt(plaintext, cipherkey):
 
     cipher = AES.new(key, mode, IV)
 
-    # The input message has to be in 16-byte length chunks
-    padded_plaintext = pad_message(plaintext)
+    # Apply PKCS7 padding to the plaintext
+    padded_plaintext = pad(plaintext.encode("utf-8"), AES.block_size)
 
-    padded_plaintext_bytes = padded_plaintext.encode()
-
-    ciphertext = cipher.encrypt(padded_plaintext_bytes)
+    ciphertext = cipher.encrypt(padded_plaintext)
 
     return ciphertext
